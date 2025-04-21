@@ -1,1 +1,1 @@
-echo "web: gunicorn scrapbook_project.wsgi" > Procfile
+web: gunicorn scrapbook_project.wsgi
