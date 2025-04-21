@@ -1,0 +1,7 @@
+README.md
+.env
+*.log
+*.sqlite3
+*.DS_Store
+tests/
+__pycache__/
