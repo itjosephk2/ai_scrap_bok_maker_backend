@@ -22,6 +22,7 @@ Backend API: [https://ai-scrapbook-backend-a3be7e5c44b0.herokuapp.com/api/scrapb
 - Django REST Framework
 - Gunicorn + WhiteNoise
 - Heroku (with Neon PostgreSQL)
+- psycopg2-binary (PostgreSQL adapter for Django)
 - `python-decouple` for environment config
 
 ## 🧪 Local Setup
@@ -67,15 +68,45 @@ Backend API: [https://ai-scrapbook-backend-a3be7e5c44b0.herokuapp.com/api/scrapb
 | `DEBUG`       | Toggle debug mode (True/False)|
 | `DATABASE_URL`| Postgres URL (Heroku only)    |
 
+## 🚪 Deployment to Heroku
+
+This app is deployed to Heroku using the following steps:
+
+1. Set up Heroku app and Postgres DB (Neon):
+   ```bash
+   heroku create ai-scrapbook-backend
+   heroku config:set SECRET_KEY='your-key'
+   heroku config:set DEBUG=False
+   heroku config:set DATABASE_URL='your-neon-postgres-url'
+   ```
+
+2. Add required build settings:
+   - `gunicorn` for production server
+   - `whitenoise` for static file handling
+   - `.slugignore` to exclude files like `README.md` from deploy
+
+3. Add Postgres driver:
+   ```bash
+   pip install psycopg2-binary
+   pip freeze > requirements.txt
+   ```
+
+4. Push to Heroku:
+   ```bash
+   git push heroku main
+   heroku run python3 manage.py migrate
+   ```
+
+5. Done! The app is live at your Heroku URL.
+
 ## 📅 Future Plans
 
 - Add real AI image processing
-- Store media in Cloudinary or S3
 - Build a React frontend
-- Add user authentication for saved scrapbooks
 
 ---
 
 ## 👨‍💻 Author
 
 Built by [Joseph Keane](https://github.com/itjosephk2)
+
