@@ -1,11 +1,9 @@
 import os
 import openai
 import traceback
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-
 from .serializers import ScrapImageSerializer
 from .models import ScrapImage
 
@@ -34,12 +32,14 @@ class ScrapbookView(APIView):
             print("Request data:", request.data)
             print("Request FILES:", request.FILES)
 
-            serializer = ScrapImageSerializer(data=request.data, files=request.FILES)
+            serializer = ScrapImageSerializer(data=request.data)
             if serializer.is_valid():
                 instance = serializer.save()
 
-                # Generate AI caption
+                # Generate caption using OpenAI
                 instance.caption = generate_caption(instance.aesthetic)
+
+                # For now, simulate the image transformation by using the original
                 instance.edited_image = instance.original_image
                 instance.save()
 
