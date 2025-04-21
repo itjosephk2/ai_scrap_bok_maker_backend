@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
-from decouple import config
+import dj_database_url
+from decouple import config, Csv
 import dj_database_url  # optional if you want Postgres later
 
 # Base directory
@@ -55,12 +56,19 @@ TEMPLATES = [
 WSGI_APPLICATION = 'scrapbook_project.wsgi.application'
 
 # Database (using SQLite for now — can swap for Postgres on Heroku)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if config("DEBUG", default=False, cast=bool):
+    # Local dev (DEBUG=True): use SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    # Production (DEBUG=False): use Postgres via env
+    DATABASES = {
+        'default': dj_database_url.config(default=config('DATABASE_URL'))
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
